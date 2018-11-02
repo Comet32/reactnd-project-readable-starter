@@ -1,15 +1,15 @@
-# API Server
+# API 服务器
 
-To install and start the API server, run the following commands in this directory:
+要安装并启动 API 服务器，请在此目录中运行以下命令：
 
-* `npm install`
-* `node server`
+- `npm install`
+- `node server`
 
-## Using The Server
+## 使用服务器
 
-### Include An Authorization Header
+### 包含 Authorization Header
 
-All requests should use an **Authorization header** to work with your own data:
+所有请求应使用**Authorization header**来处理自己的数据：
 
 ```js
 fetch(
@@ -20,28 +20,24 @@ fetch(
 )
 ```
 
-You can use the [`BooksAPI.js`](https://github.com/udacity/reactnd-project-myreads-starter/blob/master/src/BooksAPI.js) file from the MyReads Project as a guide for designing your own API calls for this project.
+### API 端点
 
-### Comment Counts
-Posts retrieved in a list or individually now contain comment counts in the format `post: { commentCount: 0 }`.  This should make it easier to display the number of comments a post has without having to call the comments endpoint for each post.   This count is updated whenever a comment is added or deleted via the `POST /comments` or `DELETE /comments/:id` endpoints.
+有以下端点可用：
 
-### API Endpoint
+| 端点                      | 用法                                                         | 参数                                                         |
+| ------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `GET /categories`         | 获取应用程序的所有类别。列表可在 `categories.js` 找到。 你可以随意添加或扩展这个列表。 |                                                              |
+| `GET /:category/posts`    | 获取特定类别的所有帖子。                                     |                                                              |
+| `GET /posts`              | 获取所有帖子。 当没有选择类别时，对主页有用。                |                                                              |
+| `POST /posts`             | 新添一个帖子。                                               | **id** - UUID就好, 但任何唯一的ID也都可行 <br> **timestamp** - [Timestamp] 可以以任何你喜欢的格式，你也可以使用 `Date.now()` 。 <br> **title** - [String] <br> **body** - [String] <br> **owner** - [String] <br> **category** -  所有类别均列在 `categories.js`。 你可以随意添加或扩展这个列表。 |
+| `GET /posts/:id`          | 获取单个帖子的详细信息。                                     |                                                              |
+| `POST /posts/:id`         | 用于在帖子中投票。                                           | **option** - [String]: `"upVote"` 或 `"downVote"`.           |
+| `PUT /posts/:id`          | 编辑现有帖子中的详细信息                                     | **title** - [String] <br> **body** - [String]                |
+| `DELETE /posts/:id`       | 将帖子的已删除标志设置为“true”。 <br> 将所有子注释的 parentDeleted 标志设置为“true”。 |                                                              |
+| `GET /posts/:id/comments` | 获取单个帖子的所有评论。                                     |                                                              |
+| `POST /comments`          | 在帖子中添加评论                                             | **id** - 任何唯一的ID。 与帖子一样，UUID可能是最好的。<br> **timestamp** - [Timestamp]  <br> **body** - [String] <br> **owner** - [String] <br> **parentId** - 需要匹配到数据库中的帖子 ID |
+| `GET /comments/:id`       | 获取单个评论的详细信息。                                     |                                                              |
+| `POST /comments/:id`      | 用于投票评论。                                               |                                                              |
+| `PUT /comments/:id`       | 编辑现有评论的详细信息。                                     | **timestamp** - 时间戳 <br> **body** - [String]              |
+| `DELETE /comments/:id`    | 将评论的已删除标志设置为`true`.                              | &nbsp;                                                       |
 
-The following endpoints are available:
-
-| Endpoints       | Usage          | Params         |
-|-----------------|----------------|----------------|
-| `GET /categories` | Get all of the categories available for the app. List is found in `categories.js`. Feel free to extend this list as you desire. |  |
-| `GET /:category/posts` | Get all of the posts for a particular category. |  |
-| `GET /posts` | Get all of the posts. Useful for the main page when no category is selected. |  |
-| `POST /posts` | Add a new post. | **id** - UUID should be fine, but any unique id will work <br> **timestamp** - [Timestamp] Can in whatever format you like, you can use `Date.now()` if you like. <br> **title** - [String] <br> **body** - [String] <br> **author** - [String] <br> **category** -  Any of the categories listed in `categories.js`. Feel free to extend this list as you desire. |
-| `GET /posts/:id` | Get the details of a single post. | |
-| `POST /posts/:id` | Used for voting on a post. | **option** - [String]: Either `"upVote"` or `"downVote"`. |
-| `PUT /posts/:id` | Edit the details of an existing post. | **title** - [String] <br> **body** - [String] |
-| `DELETE /posts/:id` | Sets the deleted flag for a post to 'true'. <br> Sets the parentDeleted flag for all child comments to 'true'. | |
-| `GET /posts/:id/comments` | Get all the comments for a single post. | |
-| `POST /comments` | Add a comment to a post. | **id** - Any unique ID. As with posts, UUID is probably the best here. <br> **timestamp** - [Timestamp] Get this however you want. <br> **body** - [String] <br> **author** - [String] <br> **parentId** - Should match a post id in the database. |
-| `GET /comments/:id` | Get the details for a single comment. | |
-| `POST /comments/:id` | Used for voting on a comment. | **option** - [String]: Either `"upVote"` or `"downVote"`.  |
-| `PUT /comments/:id` | Edit the details of an existing comment. | **timestamp** - timestamp. Get this however you want. <br> **body** - [String] |
-| `DELETE /comments/:id` | Sets a comment's deleted flag to `true`. | &nbsp; |
