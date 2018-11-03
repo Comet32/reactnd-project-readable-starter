@@ -20,6 +20,7 @@ class CreatePost extends Component {
     }
     console.log(body)
     postPostsAPI(body).then(res => {
+      console.log(res)
       this.props.history.push('')
       this.props.dispatch(changeCateIndex(0))
     })
@@ -29,7 +30,7 @@ class CreatePost extends Component {
     return (
       <div style={{ width: '70%', margin: '0 auto' }}>
         <div style={{ marginBottom: 16, width: '50%' }}>
-          <Input 
+          <Input
           addonBefore="标题：" 
           placeholder='请输入标题，不能为空' 
           ref={(input) => this.titleInput = input}/>

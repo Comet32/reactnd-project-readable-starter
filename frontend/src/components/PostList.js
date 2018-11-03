@@ -1,10 +1,20 @@
-import { Table, Divider, Button } from 'antd';
+import { Table, Divider, Button, Radio } from 'antd'
 import React from 'react'
 import { connect } from 'react-redux'
-import { getPosts } from '../actions'
+import sortBy from 'sort-by'
+import { Link } from 'react-router-dom'
+ 
+import { getPosts, changePostSort } from '../actions'
 import { deletePostAPI, changePostVoteAPI } from '../utils/api'
 
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
+
 class PostList extends React.Component {
+  state = {
+    postSort: 'voteScore'
+  }
+
   componentDidMount() {
     this.funGetPosts()
   }
@@ -27,74 +37,152 @@ class PostList extends React.Component {
   }
 
   // 改变当前得分
-  handleChangeVote = (option,id) => {
-    changePostVoteAPI(option,id).then(res => {
+  handleChangeVote = (option, id) => {
+    changePostVoteAPI(option, id).then(res => {
       console.log(res)
       this.funGetPosts()
     })
   }
 
+  // 改变帖子排列顺序
+  handleChangeSort = para => {
+    let sort = ''
+    switch (para) {
+      case '标题':
+        sort = 'title'
+        break
+      case '用户':
+        sort = 'author'
+        break
+      case '评论数':
+        sort = 'comments'
+        break
+      case '当前得分':
+        sort = 'voteScore'
+        break
+      case '时间':
+        sort = 'time'
+        break
+      default:
+        sort = 'voteScore'
+    }
+    this.props.changePostSort(sort)
+  }
+
   render() {
-    const columns = [{
-      title: '标题',
-      dataIndex: 'title',
-      key: 'title',
-      render: text => <a href=" ">{text}</a>,
-    }, {
-      title: '用户',
-      dataIndex: 'author',
-      key: 'author',
-    }, {
-      title: '评论数量',
-      dataIndex: 'comments',
-      key: 'comments',
-      render: text => (
-        <span style={{ fontSize: '20px' }}>
-          {text}
-        </span >
-      )
-    }, {
-      title: '当前得分',
-      key: 'voteScore',
-      dataIndex: 'voteScore',
-      render: (text, record) => (
-        <span style={{ fontSize: '20px' }}>
-          {text}
-          <span style={{ float: 'right' }}>
-            <Button onClick={() => this.handleChangeVote('upVote',record.key)} style={{ marginRight: '10px' }} type="primary" shape="circle" icon="like" size='default' />
-            <Button onClick={() => this.handleChangeVote('downVote',record.key)} type="primary" shape="circle" icon="dislike" size='default' />
+    const columns = [
+      {
+        title: '标题',
+        dataIndex: 'title',
+        key: 'title',
+        render: text => <a href=" ">{text}</a>
+      },
+      {
+        title: '用户',
+        dataIndex: 'author',
+        key: 'author'
+      },
+      {
+        title: '评论数量',
+        dataIndex: 'comments',
+        key: 'comments',
+        render: text => <span style={{ fontSize: '20px' }}>{text}</span>
+      },
+      {
+        title: '当前得分',
+        key: 'voteScore',
+        dataIndex: 'voteScore',
+        render: (text, record) => (
+          <span style={{ fontSize: '20px' }}>
+            {text}
+            <span style={{ float: 'right' }}>
+              <Button
+                onClick={() => this.handleChangeVote('upVote', record.key)}
+                style={{ marginRight: '10px' }}
+                type="primary"
+                shape="circle"
+                icon="like"
+                size="default"
+              />
+              <Button
+                onClick={() => this.handleChangeVote('downVote', record.key)}
+                type="primary"
+                shape="circle"
+                icon="dislike"
+                size="default"
+              />
+            </span>
           </span>
-        </span >
-      ),
-    }, {
-      title: 'Action',
-      key: 'action',
-      render: (text, record) => (
-        <span>
-          <a href=" ">Edit</a>
-          <Divider type="vertical" />
-          <a onClick={(e) => this.handleDeletePost(e, record.key)} href=" ">Delete</a>
+        )
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        render: (text, record) => (
+          <span>
+            <Link to={`/modify-post/${record.key}`}>Edit</Link>
+            <Divider type="vertical" />
+            <a onClick={e => this.handleDeletePost(e, record.key)} href=" ">
+              Delete
+            </a>
+          </span>
+        )
+      }
+    ]
+
+    const radioButtonList = ['标题', '用户', '评论数', '当前得分','时间']
+
+    // 默认是以当前得分为排序，并以分数大的排列在前的方式
+    const posts = this.props.posts.sort(sortBy(this.props.postSort)).reverse()
+
+    return (
+      <div>
+        <span style={{ fontWeight: 'bolder', fontSize: '16px' }}>
+          帖子排序：
         </span>
-      ),
-    }];
-    return <Table columns={columns} dataSource={this.props.posts}></Table>
+        <RadioGroup
+          style={{ marginBottom: '20px' }}
+          defaultValue="当前得分"
+          size="default"
+        >
+          {radioButtonList.map((item, i) => (
+            <RadioButton
+              onClick={() => this.handleChangeSort(item)}
+              key={i}
+              value={item}
+            >
+              {item}
+            </RadioButton>
+          ))}
+        </RadioGroup>
+        <Table columns={columns} dataSource={posts} />
+      </div>
+    )
   }
 }
 
-const mapState = (state) => ({
+const mapState = state => ({
   posts: state.toJS().postsData.posts.map(post => ({
     key: post.id,
     title: post.title,
     author: post.author,
     comments: post.commentCount,
-    voteScore: post.voteScore
-  }))
+    voteScore: post.voteScore,
+    time: post.timestamp
+  })),
+  postSort: state.getIn(['postsData', 'postSort'])
 })
 
-const mapDispatch = (dispatch) => ({
+const mapDispatch = dispatch => ({
   getPosts(cate) {
     dispatch(getPosts(cate))
+  },
+  changePostSort(sort) {
+    dispatch(changePostSort(sort))
   }
 })
 
-export default connect(mapState, mapDispatch)(PostList)
+export default connect(
+  mapState,
+  mapDispatch
+)(PostList)

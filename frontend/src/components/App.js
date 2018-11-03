@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 import AppHeader from './AppHeader'
 import PostList from './PostList'
 import CreatePost from './CreatePost'
+import ModifyPost from './ModifyPost'
 import { BrowserRouter, Route } from 'react-router-dom'
 
 
@@ -26,7 +27,8 @@ export default class Home extends Component {
               <Route path='/react' exact component={PostList} />
               <Route path='/redux' exact component={PostList} />
               <Route path='/udacity' exact component={PostList} />
-              <Route path='/createpost' exact component={CreatePost} />
+              <Route path='/create-post' exact component={CreatePost} />
+              <Route path='/modify-post/:id' exact component={ModifyPost}></Route>
             </Content>
             <Footer style={{ textAlign: 'center' }}>
               Readable ©2018 Created by Zhao

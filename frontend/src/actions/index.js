@@ -25,3 +25,21 @@ export function getPosts(cate) {
     })
   }
 }
+
+// 改变排列顺序
+export const CHANGE_SORT = 'CHANGE_SORT'
+export function changePostSort(sort) {
+  return {
+    type: CHANGE_SORT,
+    sort
+  }
+}
+
+// 获取需要改变的帖子
+export const GET_MODIFY_POST = 'GET_MODIFY_POST'
+export function getModifyPost(post) {
+  return {
+    type: GET_MODIFY_POST,
+    post
+  }
+}
