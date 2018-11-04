@@ -21,6 +21,8 @@ class PostDetail extends Component {
     return `${year}年${month}月${day}日`
   }
 
+  sss
+
   changePostVote = (option, id) => {
     changePostVoteAPI(option, id).then(res => {
       this.props.dispatch({
