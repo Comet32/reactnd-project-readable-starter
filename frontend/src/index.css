@@ -54,3 +54,42 @@
   a {
     text-decoration: none;
   }
+
+  .cf:after{
+    content: '';
+    clear: both;
+    display: block;
+  }
+
+  /* 页面内容 css */
+  .detail-postAuthor{
+    float: left;
+    font-size: 14px;
+    color: #999;
+  }
+
+  .detail-postTime {
+    float: right;
+    font-size: 14px;
+    color: #999;
+  }
+
+  .detail-postBody {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 100px;
+  }
+
+  .detail-postInfo {
+    margin-right: 20px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .detail-postTitle{
+    font-size: 26px;
+  }
+
+  .detail-postAction{
+    float: right;
+  }

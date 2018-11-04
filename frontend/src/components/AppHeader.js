@@ -43,7 +43,7 @@ class AppHeader extends Component {
               <Menu.Item onClick={ () => this.initIndex()} key={key}><Link to={`/${item.path}`}>{capitalize(item.name)}</Link></Menu.Item>
             ))}
           </Menu>
-          <Link to='create-post'><Button onClick={() => changeCate(5)} style={buttonStyle} type="primary" icon="plus" size={'default'}>新建帖子</Button></Link>
+          <Link to='/create-post'><Button onClick={() => changeCate(5)} style={buttonStyle} type="primary" icon="plus" size={'default'}>新建帖子</Button></Link>
         </Header>
       </div>
     )

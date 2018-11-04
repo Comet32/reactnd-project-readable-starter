@@ -4,6 +4,7 @@ import AppHeader from './AppHeader'
 import PostList from './PostList'
 import CreatePost from './CreatePost'
 import ModifyPost from './ModifyPost'
+import PostDetail from './PostDetail'
 import { BrowserRouter, Route } from 'react-router-dom'
 
 
@@ -28,7 +29,8 @@ export default class Home extends Component {
               <Route path='/redux' exact component={PostList} />
               <Route path='/udacity' exact component={PostList} />
               <Route path='/create-post' exact component={CreatePost} />
-              <Route path='/modify-post/:id' exact component={ModifyPost}></Route>
+              <Route path='/modify-post' exact component={ModifyPost}></Route>
+              <Route path='/:category/:id' exact component={PostDetail}></Route>
             </Content>
             <Footer style={{ textAlign: 'center' }}>
               Readable ©2018 Created by Zhao

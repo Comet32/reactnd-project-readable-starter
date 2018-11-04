@@ -34,12 +34,3 @@ export function changePostSort(sort) {
     sort
   }
 }
-
-// 获取需要改变的帖子
-export const GET_MODIFY_POST = 'GET_MODIFY_POST'
-export function getModifyPost(post) {
-  return {
-    type: GET_MODIFY_POST,
-    post
-  }
-}

@@ -27,7 +27,7 @@ export function getPostAPI(id) {
 
 // 修改帖子
 export function modifyPost(id,body) {
-  return fetch(`${api}/${id}`, {
+  return fetch(`${api}/posts/${id}`, {
     headers: {
       ...headers,
       'Content-Type': 'application/json'

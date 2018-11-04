@@ -3,8 +3,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import sortBy from 'sort-by'
 import { Link } from 'react-router-dom'
- 
+
 import { getPosts, changePostSort } from '../actions'
+import { changeID } from '../actions/modifyPage'
 import { deletePostAPI, changePostVoteAPI } from '../utils/api'
 
 const RadioButton = Radio.Button
@@ -17,6 +18,7 @@ class PostList extends React.Component {
 
   componentDidMount() {
     this.funGetPosts()
+    this.props.changePostSort('voteScore')
   }
 
   // 根据路由获取帖子
@@ -70,15 +72,17 @@ class PostList extends React.Component {
   }
 
   render() {
+    const { changeID } = this.props
+
     const columns = [
       {
         title: '标题',
         dataIndex: 'title',
         key: 'title',
-        render: text => <a href=" ">{text}</a>
+        render: (text, record) => <Link to={`/${record.category}/${record.key}`}>{text}</Link>
       },
       {
-        title: '用户',
+        title: '作者',
         dataIndex: 'author',
         key: 'author'
       },
@@ -120,7 +124,10 @@ class PostList extends React.Component {
         key: 'action',
         render: (text, record) => (
           <span>
-            <Link to={`/modify-post/${record.key}`}>Edit</Link>
+            <Link to='/modify-post'
+              onClick={(e) => {
+                changeID(record.key)
+              }}>Edit</Link>
             <Divider type="vertical" />
             <a onClick={e => this.handleDeletePost(e, record.key)} href=" ">
               Delete
@@ -130,9 +137,9 @@ class PostList extends React.Component {
       }
     ]
 
-    const radioButtonList = ['标题', '用户', '评论数', '当前得分','时间']
+    const radioButtonList = ['标题', '用户', '评论数', '当前得分', '时间']
 
-    // 默认是以当前得分为排序，并以分数大的排列在前的方式
+    // 默认是以当前得分为排序，并以分数大的排列在前
     const posts = this.props.posts.sort(sortBy(this.props.postSort)).reverse()
 
     return (
@@ -142,7 +149,7 @@ class PostList extends React.Component {
         </span>
         <RadioGroup
           style={{ marginBottom: '20px' }}
-          defaultValue="当前得分"
+          defaultValue='当前得分'
           size="default"
         >
           {radioButtonList.map((item, i) => (
@@ -168,7 +175,8 @@ const mapState = state => ({
     author: post.author,
     comments: post.commentCount,
     voteScore: post.voteScore,
-    time: post.timestamp
+    time: post.timestamp,
+    category: post.category
   })),
   postSort: state.getIn(['postsData', 'postSort'])
 })
@@ -179,6 +187,9 @@ const mapDispatch = dispatch => ({
   },
   changePostSort(sort) {
     dispatch(changePostSort(sort))
+  },
+  changeID(id) {
+    dispatch(changeID(id))
   }
 })
 

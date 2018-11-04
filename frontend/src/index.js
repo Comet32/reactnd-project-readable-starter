@@ -7,13 +7,17 @@ import { Provider, } from 'react-redux'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux-immutable'
 
-import  postsData  from './reducers'
-import  headerData  from './reducers/header'
+import postsData from './reducers'
+import headerData from './reducers/header'
+import modifyData from './reducers/modifyPage'
+import detailData from './reducers/detailPage'
 
 //合并 reducer
 const reducer = combineReducers({
   postsData,
-  headerData
+  headerData,
+  modifyData,
+  detailData
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -22,7 +26,7 @@ const enhancer = composeEnhancers(applyMiddleware(thunk))
 const store = createStore(reducer, enhancer)
 
 ReactDOM.render(
-<Provider store={store}>
-  <App />
-</Provider>
-, document.getElementById('root'));
+  <Provider store={store}>
+    <App />
+  </Provider>
+  , document.getElementById('root'));

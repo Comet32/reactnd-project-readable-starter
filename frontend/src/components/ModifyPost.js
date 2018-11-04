@@ -3,30 +3,35 @@ import { Input, Radio, Button } from 'antd'
 import { modifyPost, getPostAPI } from '../utils/api'
 import { connect } from 'react-redux'
 import { changeCateIndex } from '../actions/header'
-import { getModifyPost } from '../actions/index'
+import { changeBody, changeTitle, IniModify } from '../actions/modifyPage'
 
 const { TextArea } = Input
 
 class CreatePost extends Component {
+  state = {
+    count: 0
+  }
+
   componentDidMount() {
     this.props.changeCateIndex(5)
-    const id = this.props.match.params.id
+    const id = this.props.post.id
     getPostAPI(id).then(res => {
-      this.props.getModifyPost(res)
+      this.props.IniModify(res)
     })
   }
 
   handleSubmit = e => {
     e.preventDefault()
+    const id = this.props.post.id
     const body = {
       title: this.titleInput.input.value,
       body: this.bodyInput.textAreaRef.value
     }
     console.log(body)
-    modifyPost(body).then(res => {
+    modifyPost(id, body).then(res => {
       console.log(res)
       this.props.history.push('')
-      this.props.dispatch(changeCateIndex(0))
+      this.props.changeCateIndex(0)
     })
   }
 
@@ -37,15 +42,16 @@ class CreatePost extends Component {
       <div style={{ width: '70%', margin: '0 auto' }}>
         <div style={{ marginBottom: 16, width: '50%' }}>
           <Input
-            defaultValue={post.title}
+            value={post.title}
             addonBefore="标题："
             placeholder="请输入标题，不能为空"
+            onChange={(e) => this.props.changeTitle(e.target.value)}
             ref={input => (this.titleInput = input)}
           />
         </div>
         <div style={{ marginBottom: 16, width: '25%' }}>
           <Input
-            defaultValue={post.author}
+            value={post.author}
             addonBefore="用户："
             disabled
             placeholder="请输入用户名，不能为空"
@@ -63,7 +69,7 @@ class CreatePost extends Component {
           </span>
           <Radio.Group
             disabled
-            Value={post.category}
+            value={post.category}
             buttonStyle="solid"
           >
             <Radio.Button value="react">React</Radio.Button>
@@ -76,10 +82,11 @@ class CreatePost extends Component {
             内容：
           </span>
           <TextArea
-            defaultValue={post.body}
+            value={post.body}
             rows={4}
             style={{ marginTop: '10px' }}
             placeholder="请输入内容，不能为空"
+            onChange={(e) => this.props.changeBody(e.target.value)}
             ref={input => (this.bodyInput = input)}
           />
         </div>
@@ -94,15 +101,21 @@ class CreatePost extends Component {
 }
 
 const mapState = state => ({
-  post: state.getIn(['postsData', 'modifyPost'])
+  post: state.get('modifyData').toJS(),
 })
 
 const mapDispatch = dispatch => ({
-  getModifyPost(post) {
-    dispatch(getModifyPost(post))
+  IniModify(post) {
+    dispatch(IniModify(post))
   },
   changeCateIndex(num) {
     dispatch(changeCateIndex(num))
+  },
+  changeBody(value) {
+    dispatch(changeBody(value))
+  },
+  changeTitle(value) {
+    dispatch(changeTitle(value))
   }
 })
 
