@@ -1,4 +1,4 @@
-import { message,Button, Divider, Input } from 'antd'
+import { message, Button, Divider, Input } from 'antd'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -18,6 +18,11 @@ class PostDetail extends Component {
     const id = this.props.match.params.id
     this.props.dispatch(getPost(id))
     this.props.dispatch(changeCateIndex(5))
+    this.props.dispatch(getComments(id))
+  }
+
+  componentWillUnmount() {
+    const id = this.props.match.params.id
     this.props.dispatch(getComments(id))
   }
 
@@ -45,17 +50,20 @@ class PostDetail extends Component {
     })
   }
 
-  handleSubmitComment = (that) => {
+  handleSubmitComment = that => {
+    // 表单验证
     let bodyValue = that.bodyInput.textAreaRef.value
     let authorVlaue = that.authorInput.input.value
-    if(!authorVlaue.trim()){
-      message.error('作者名称不能为空',2)
+    if (!authorVlaue.trim()) {
+      message.error('作者名称不能为空', 2)
       return
     }
-    if(!bodyValue.trim()){
-      message.error('评论内容不能为空',2)
+    if (!bodyValue.trim()) {
+      message.error('评论内容不能为空', 2)
       return
     }
+
+    // 向服务器提交表单
     addCommentAPI({
       id: random24(),
       timestamp: Date.now(),
@@ -78,94 +86,106 @@ class PostDetail extends Component {
         {post.id === undefined ? (
           '此帖子已被删除'
         ) : (
-            <div>
-              <div className="detail-postTitle">{post.title}</div>
-              <Divider />
-              <div className="cf">
-                <span className="detail-postAuthor">{post.author}</span>
-                <span className="detail-postTime">
-                  {this.switchTime(post.timestamp)}
-                </span>
-              </div>
-              <div className="detail-postBody">{post.body}</div>
-              <div className="detail-postInfo">
-                <span style={{ marginRight: '20px' }}>
-                  当前得分：
+          <div>
+            <div className="detail-postTitle">{post.title}</div>
+            <Divider />
+            <div className="cf">
+              <span className="detail-postAuthor">{post.author}</span>
+              <span className="detail-postTime">
+                {this.switchTime(post.timestamp)}
+              </span>
+            </div>
+            <div className="detail-postBody">{post.body}</div>
+            <div className="detail-postInfo">
+              <span style={{ marginRight: '20px' }}>
+                当前得分：
                 {post.voteScore}
-                </span>
-                <Button
-                  onClick={() => this.changePostVote('upVote', post.id)}
-                  style={{ marginRight: '10px' }}
-                  type="primary"
-                  shape="circle"
-                  icon="like"
-                  size="default"
-                />
-                <Button
-                  onClick={() => this.changePostVote('downVote', post.id)}
-                  style={{ marginRight: '50px' }}
-                  type="primary"
-                  shape="circle"
-                  icon="dislike"
-                  size="default"
-                />
-                <span>
-                  评论数量：
+              </span>
+              <Button
+                onClick={() => this.changePostVote('upVote', post.id)}
+                style={{ marginRight: '10px' }}
+                type="primary"
+                shape="circle"
+                icon="like"
+                size="default"
+              />
+              <Button
+                onClick={() => this.changePostVote('downVote', post.id)}
+                style={{ marginRight: '50px' }}
+                type="primary"
+                shape="circle"
+                icon="dislike"
+                size="default"
+              />
+              <span>
+                评论数量：
                 {post.commentCount}
-                </span>
-                <span className="detail-postAction">
-                  <Link
-                    to="/modify-post"
-                    onClick={e => {
-                      dispatch(changeID(post.id))
-                    }}
-                  >
-                    Edit
+              </span>
+              <span className="detail-postAction">
+                <Link
+                  to="/modify-post"
+                  onClick={e => {
+                    dispatch(changeID(post.id))
+                  }}
+                >
+                  Edit
                 </Link>
-                  <Divider type="vertical" />
-                  <a
-                    href=" "
-                    onClick={e => {
-                      this.handleDeletePost(e, post.id)
-                    }}
-                  >
-                    Delete
+                <Divider type="vertical" />
+                <a
+                  href=" "
+                  onClick={e => {
+                    this.handleDeletePost(e, post.id)
+                  }}
+                >
+                  Delete
                 </a>
-                </span>
+              </span>
+            </div>
+            <Divider style={{ fontSize: '20px' }}>发 表 评 论</Divider>
+            <div>
+              <div style={{ marginBottom: '20px' }}>
+                <label htmlFor="commentAuthor">作者名称：</label>
+                <Input
+                  ref={authorInput => (this.authorInput = authorInput)}
+                  style={{ width: '30%' }}
+                  id="commentAuthor"
+                  placeholder="请输入作者名称"
+                />
               </div>
-              <Divider style={{ fontSize: '20px' }}>发 表 评 论</Divider>
-              <div>
-                <div style={{ marginBottom: '20px' }}>
-                  <label htmlFor="commentAuthor">作者名称：</label>
-                  <Input
-                    ref={authorInput => this.authorInput = authorInput}
-                    style={{ width: '30%' }}
-                    id="commentAuthor"
-                    placeholder="请输入作者名称"
-                  />
-                </div>
-                <div style={{ marginBottom: '20px' }}>
-                  <label htmlFor="commentBody">评论内容：</label>
-                  <TextArea
-                    ref={bodyInput => this.bodyInput = bodyInput}
-                    style={{ width: '70%' }}
-                    id="commentBody"
-                    rows={4}
-                    placeholder="请输入内容"
-                  />
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <Button onClick={()=>{this.handleSubmitComment(this)}} type="primary" size="large">
-                    发表评论
+              <div style={{ marginBottom: '20px' }}>
+                <label htmlFor="commentBody">评论内容：</label>
+                <TextArea
+                  ref={bodyInput => (this.bodyInput = bodyInput)}
+                  style={{ width: '70%' }}
+                  id="commentBody"
+                  rows={4}
+                  placeholder="请输入内容"
+                />
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <Button
+                  onClick={() => {
+                    this.handleSubmitComment(this)
+                  }}
+                  type="primary"
+                  size="large"
+                >
+                  发表评论
                 </Button>
-                </div>
-                <Divider style={{ fontSize: '20px' }}>评 论</Divider>
-                <div>
-                  {comments.map(item => <CommentItem parentID={this.props.match.params.id} item={item} key={item.id} />)}
-                </div>
+              </div>
+              <Divider style={{ fontSize: '20px' }}>评 论</Divider>
+              <div>
+                {comments.map(item => (
+                  <CommentItem
+                    parentID={this.props.match.params.id}
+                    item={item}
+                    key={item.id}
+                  />
+                ))}
               </div>
             </div>
-          )}
+          </div>
+        )}
       </div>
     )
   }
@@ -173,7 +193,10 @@ class PostDetail extends Component {
 
 const mapState = state => ({
   post: state.getIn(['detailData', 'post']).toJS(),
-  comments: state.getIn(['detailData', 'comments']).toJS().reverse()
+  comments: state
+    .getIn(['detailData', 'comments'])
+    .toJS()
+    .reverse()
 })
 
 export default connect(mapState)(PostDetail)

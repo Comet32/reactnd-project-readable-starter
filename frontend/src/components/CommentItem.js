@@ -82,9 +82,9 @@ class CommentItem extends Component {
           ref={textInput => this.textInput = textInput}
           placeholder="Inner Card content"
           onChange={this.handleChangeText}
-          defaultValue={item.body}
+          value={body}
         />
-          : item.body}
+          : body}
         <div style={{ marginTop: '20px' }}>
           <span style={{ marginRight: '10px' }}>当前得分：{vote}</span> <Button
             onClick={() => { this.handleUpVote('upVote') }}

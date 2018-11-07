@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Radio, Button } from 'antd'
+import { message, Input, Radio, Button } from 'antd'
 import { modifyPost, getPostAPI } from '../utils/api'
 import { connect } from 'react-redux'
 import { changeCateIndex } from '../actions/header'
@@ -22,6 +22,21 @@ class CreatePost extends Component {
 
   handleSubmit = e => {
     e.preventDefault()
+    // 表单验证
+    const titleInput = this.titleInput.input.value
+    const bodyInput = this.bodyInput.textAreaRef.value
+
+    if (!titleInput.trim()) {
+      message.error('标题不能为空', 2)
+      return
+    }
+
+    if (!bodyInput.trim()) {
+      message.error('内容不能为空', 2)
+      return
+    }
+
+    // 提交表单
     const id = this.props.post.id
     const body = {
       title: this.titleInput.input.value,
@@ -45,7 +60,7 @@ class CreatePost extends Component {
             value={post.title}
             addonBefore="标题："
             placeholder="请输入标题，不能为空"
-            onChange={(e) => this.props.changeTitle(e.target.value)}
+            onChange={e => this.props.changeTitle(e.target.value)}
             ref={input => (this.titleInput = input)}
           />
         </div>
@@ -67,11 +82,7 @@ class CreatePost extends Component {
           >
             类别：
           </span>
-          <Radio.Group
-            disabled
-            value={post.category}
-            buttonStyle="solid"
-          >
+          <Radio.Group disabled value={post.category} buttonStyle="solid">
             <Radio.Button value="react">React</Radio.Button>
             <Radio.Button value="redux">Redux</Radio.Button>
             <Radio.Button value="udacity">Udacity</Radio.Button>
@@ -86,7 +97,7 @@ class CreatePost extends Component {
             rows={4}
             style={{ marginTop: '10px' }}
             placeholder="请输入内容，不能为空"
-            onChange={(e) => this.props.changeBody(e.target.value)}
+            onChange={e => this.props.changeBody(e.target.value)}
             ref={input => (this.bodyInput = input)}
           />
         </div>
@@ -101,7 +112,7 @@ class CreatePost extends Component {
 }
 
 const mapState = state => ({
-  post: state.get('modifyData').toJS(),
+  post: state.get('modifyData').toJS()
 })
 
 const mapDispatch = dispatch => ({
