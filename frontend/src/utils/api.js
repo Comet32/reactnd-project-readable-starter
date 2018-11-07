@@ -26,7 +26,7 @@ export function getPostAPI(id) {
 }
 
 // 修改帖子
-export function modifyPost(id,body) {
+export function modifyPost(id, body) {
   return fetch(`${api}/posts/${id}`, {
     headers: {
       ...headers,
@@ -66,4 +66,58 @@ export function changePostVoteAPI(option, id) {
       option
     })
   }).then(res => res.json())
+}
+
+// 获取某一帖子的所有评论
+export function getCommentsAPI(id) {
+  return fetch(`${api}/posts/${id}/comments`, { headers }).then(res => res.json())
+}
+
+// 添加新的评论
+export function addCommentAPI(body){
+  return fetch(`${api}/comments`,{
+    headers:{
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify(body)
+  }).then(res => res.json)
+}
+
+// 改变某一个评论的投票数
+export function changeCommentVoteAPI(id, option) {
+  return fetch(`${api}/comments/${id}`, {
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      option
+    })
+  }).then(res => res.json())
+}
+
+// 修改某一评论的内容
+export function changeCommentBodyAPI(id,body) {
+  return fetch(`${api}/comments/${id}`, {
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    method: 'PUT',
+    body: JSON.stringify({
+      timestamp: Date.now(),
+      body
+    })
+  }).then(res => res.json())
+}
+
+// 删除某一评论
+export function DeleteCommentAPI(id){
+  return fetch(`${api}/comments/${id}`,{
+    headers,
+    method:'DELETE'
+  }).then(res=> res.json())
 }
