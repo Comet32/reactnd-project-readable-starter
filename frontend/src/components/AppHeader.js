@@ -4,7 +4,7 @@ import { Layout, Menu, Button } from 'antd';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { getCategories } from '../actions'
+import { getCategories, getPosts } from '../actions'
 import { changeCateIndex } from '../actions/header'
 
 const { Header } = Layout;
@@ -20,6 +20,10 @@ class AppHeader extends Component {
     let cate = window.location.pathname.slice(1)
     let num = strToIndex(cate)
     this.props.changeCate(num)
+
+    // 获取新的服务器数据
+    console.log('init',cate)
+    this.props.getPosts(cate)
   }
 
   render() {
@@ -40,7 +44,7 @@ class AppHeader extends Component {
             style={{ lineHeight: '64px' }}
           >
             {categories && categories.map((item, key) => (
-              <Menu.Item onClick={ () => this.initIndex()} key={key}><Link to={`/${item.path}`}>{capitalize(item.name)}</Link></Menu.Item>
+              <Menu.Item onClick={() => this.initIndex()} key={key}><Link to={`/${item.path}`}>{capitalize(item.name)}</Link></Menu.Item>
             ))}
           </Menu>
           <Link to='/create-post'><Button onClick={() => changeCate(5)} style={buttonStyle} type="primary" icon="plus" size={'default'}>新建帖子</Button></Link>
@@ -61,6 +65,9 @@ const mapDispatch = (dispatch) => ({
   },
   changeCate(num) {
     dispatch(changeCateIndex(num))
+  },
+  getPosts(cate) {
+    dispatch(getPosts(cate))
   }
 })
 

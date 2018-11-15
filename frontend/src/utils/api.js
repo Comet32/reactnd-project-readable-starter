@@ -17,7 +17,11 @@ export function getPostsAPI(cate) {
   } else {
     newApi = `${api}/${cate}/posts`
   }
-  return fetch(newApi, { headers }).then(res => res.json())
+  return fetch(newApi, { headers }).then(res => {
+    return res.json()
+  }).catch((res) => {
+    return res
+  })
 }
 
 // 获取某一个帖子
@@ -74,9 +78,9 @@ export function getCommentsAPI(id) {
 }
 
 // 添加新的评论
-export function addCommentAPI(body){
-  return fetch(`${api}/comments`,{
-    headers:{
+export function addCommentAPI(body) {
+  return fetch(`${api}/comments`, {
+    headers: {
       ...headers,
       'Content-Type': 'application/json'
     },
@@ -100,7 +104,7 @@ export function changeCommentVoteAPI(id, option) {
 }
 
 // 修改某一评论的内容
-export function changeCommentBodyAPI(id,body) {
+export function changeCommentBodyAPI(id, body) {
   return fetch(`${api}/comments/${id}`, {
     headers: {
       ...headers,
@@ -115,9 +119,9 @@ export function changeCommentBodyAPI(id,body) {
 }
 
 // 删除某一评论
-export function DeleteCommentAPI(id){
-  return fetch(`${api}/comments/${id}`,{
+export function DeleteCommentAPI(id) {
+  return fetch(`${api}/comments/${id}`, {
     headers,
-    method:'DELETE'
-  }).then(res=> res.json())
+    method: 'DELETE'
+  }).then(res => res.json())
 }

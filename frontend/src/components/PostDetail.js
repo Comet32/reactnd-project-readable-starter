@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import CommentItem from './CommentItem'
+import NoMatch from './NoMatch'
 import { changePostVoteAPI, deletePostAPI, addCommentAPI } from '../utils/api'
 import { random24 } from '../utils/helpers'
 
@@ -76,7 +77,7 @@ class PostDetail extends Component {
     return (
       <div style={{ width: '70%', margin: '0 auto' }}>
         {post.id === undefined ? (
-          '此帖子已被删除'
+          <NoMatch />
         ) : (
             <div>
               <div className="detail-postTitle">{post.title}</div>

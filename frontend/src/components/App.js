@@ -5,7 +5,8 @@ import PostList from './PostList'
 import CreatePost from './CreatePost'
 import ModifyPost from './ModifyPost'
 import PostDetail from './PostDetail'
-import { BrowserRouter, Route } from 'react-router-dom'
+import NoMathch from './NoMatch'
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 
 const { Content, Footer } = Layout;
@@ -24,20 +25,24 @@ export default class Home extends Component {
           <Layout className="layout" style={{ minHeight: browserHeight }}>
             <AppHeader />
             <Content style={{ padding: '0 50px', marginTop: '30px' }}>
-              <Route path='/' exact component={PostList} />
-              <Route path='/react' exact component={PostList} />
-              <Route path='/redux' exact component={PostList} />
-              <Route path='/udacity' exact component={PostList} />
-              <Route path='/create-post' exact component={CreatePost} />
-              <Route path='/modify-post' exact component={ModifyPost}></Route>
-              <Route path='/:category/:id' exact component={PostDetail}></Route>
+              <Switch>
+                <Route exact path='/' component={PostList} />
+                <Route exact path='/react' component={PostList} />
+                <Route exact path='/redux' component={PostList} />
+                <Route exact path='/udacity' component={PostList} />
+                <Route exact path='/create-post' component={CreatePost} />
+                <Route exact path='/modify-post' component={ModifyPost} />
+                <Route exact path='/:category/:id' component={PostDetail} />
+                <Route exact path='/404' component={NoMathch} />
+                <Redirect from="*" to="/404" />
+              </Switch>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>
-              Readable ©2018 Created by Zhao
+              <Footer style={{ textAlign: 'center' }}>
+                Readable ©2018 Created by Zhao
             </Footer>
           </Layout>
         </BrowserRouter>
       </div>
-    )
-  }
-}
+        )
+      }
+    }

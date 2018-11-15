@@ -4,7 +4,6 @@ import { GET_CATEGORIES, GET_POSTS, CHANGE_SORT } from '../actions'
 let postsDefault = fromJS({
   categories: [],
   posts: [],
-  comments: [],
   postSort: 'voteScore'
 })
 
