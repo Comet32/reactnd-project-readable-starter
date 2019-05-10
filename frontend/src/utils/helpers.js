@@ -6,7 +6,7 @@ export function capitalize(str = '') {
 }
 
 // 字符 => 对应数字
-export function strToIndex(str) {
+export function CateStrToIndex(str) {
   switch (str) {
     case '':
       return 0
@@ -23,6 +23,9 @@ export function strToIndex(str) {
 
 // 随机生成 24 位 带有 0-9 与 a-z 的字符串
 export function random24(){
-  let num8 =  Math.random().toString(16).substr(-8)
-  return num8 + num8 + num8
+  let str = ''
+  for(let i = 0; i < 3; i++){
+    str += Math.random().toString(16).substr(-8)
+  }
+  return str
 }

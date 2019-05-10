@@ -86,7 +86,7 @@ export function addCommentAPI(body) {
     },
     method: 'POST',
     body: JSON.stringify(body)
-  }).then(res => res.json)
+  }).then(res => res.json())
 }
 
 // 改变某一个评论的投票数

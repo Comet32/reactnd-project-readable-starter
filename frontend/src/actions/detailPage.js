@@ -6,7 +6,8 @@ export function getPost(id){
     getPostAPI(id).then(res => {
       dispatch({
         type: GET_POST,
-        post: res
+        post: res,
+        isLoading: false
       })
     })
   }

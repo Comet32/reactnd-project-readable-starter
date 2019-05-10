@@ -1,8 +1,10 @@
-import { Table, Divider, Button, Radio } from 'antd'
+import { Table, Divider, Button, Radio, message } from 'antd'
 import React from 'react'
 import { connect } from 'react-redux'
 import sortBy from 'sort-by'
 import { Link } from 'react-router-dom'
+
+import deleteConfirm from './DeleteConfirm'
 
 import { getPosts, changePostSort } from '../actions'
 import { changeID } from '../actions/modifyPage'
@@ -17,12 +19,12 @@ class PostList extends React.Component {
   }
 
   componentDidMount() {
-    this.funGetPosts()
+    this.getCataPosts()
     this.props.changePostSort('voteScore')
   }
 
   // 根据路由获取帖子
-  funGetPosts = () => {
+  getCataPosts = () => {
     // 获取路由中的分类字符串
     let cate = this.props.match.path.slice(1)
     this.props.getPosts(cate)
@@ -31,18 +33,20 @@ class PostList extends React.Component {
   // 删除帖子
   handleDeletePost = (e, id) => {
     e.preventDefault()
-    console.log(id)
+    deleteConfirm(id, this.handleOk)
+  }
+  
+  handleOk = id => {
     deletePostAPI(id).then(res => {
-      console.log(res)
-      this.funGetPosts()
+      this.getCataPosts()
+      message.success('删除成功', 2)
     })
   }
 
-  // 改变当前得分
+  // 改变投票得分
   handleChangeVote = (option, id) => {
     changePostVoteAPI(option, id).then(res => {
-      console.log(res)
-      this.funGetPosts()
+      this.getCataPosts()
     })
   }
 
@@ -59,7 +63,7 @@ class PostList extends React.Component {
       case '评论数':
         sort = 'comments'
         break
-      case '当前得分':
+      case '投票得分':
         sort = 'voteScore'
         break
       case '时间':
@@ -79,7 +83,9 @@ class PostList extends React.Component {
         title: '标题',
         dataIndex: 'title',
         key: 'title',
-        render: (text, record) => <Link to={`/${record.category}/${record.key}`}>{text}</Link>
+        render: (text, record) => (
+          <Link to={`/${record.category}/${record.key}`}>{text}</Link>
+        )
       },
       {
         title: '作者',
@@ -93,7 +99,7 @@ class PostList extends React.Component {
         render: text => <span style={{ fontSize: '20px' }}>{text}</span>
       },
       {
-        title: '当前得分',
+        title: '投票得分',
         key: 'voteScore',
         dataIndex: 'voteScore',
         render: (text, record) => (
@@ -124,10 +130,14 @@ class PostList extends React.Component {
         key: 'action',
         render: (text, record) => (
           <span>
-            <Link to='/modify-post'
-              onClick={(e) => {
+            <Link
+              to="/modify-post"
+              onClick={e => {
                 changeID(record.key)
-              }}>Edit</Link>
+              }}
+            >
+              Edit
+            </Link>
             <Divider type="vertical" />
             <a onClick={e => this.handleDeletePost(e, record.key)} href=" ">
               Delete
@@ -137,10 +147,12 @@ class PostList extends React.Component {
       }
     ]
 
-    const radioButtonList = ['标题', '用户', '评论数', '当前得分', '时间']
+    const radioButtonList = ['标题', '用户', '评论数', '投票得分', '时间']
 
-    // 默认是以当前得分为排序，并以分数大的排列在前
-    const posts = this.props.posts.sort(sortBy(this.props.postSort)).reverse()
+    // 默认是以投票得分为排序，并以分数大的排列在前
+    const posts =
+      this.props.posts &&
+      this.props.posts.sort(sortBy(this.props.postSort)).reverse()
 
     return (
       <div>
@@ -149,7 +161,7 @@ class PostList extends React.Component {
         </span>
         <RadioGroup
           style={{ marginBottom: '20px' }}
-          defaultValue='当前得分'
+          defaultValue="投票得分"
           size="default"
         >
           {radioButtonList.map((item, i) => (
@@ -162,24 +174,28 @@ class PostList extends React.Component {
             </RadioButton>
           ))}
         </RadioGroup>
-        <Table columns={columns} dataSource={posts} />
+        {posts && <Table columns={columns} dataSource={posts} />}
       </div>
     )
   }
 }
 
-const mapState = state => ({
-  posts: state.toJS().postsData.posts.map(post => ({
-    key: post.id,
-    title: post.title,
-    author: post.author,
-    comments: post.commentCount,
-    voteScore: post.voteScore,
-    time: post.timestamp,
-    category: post.category
-  })),
-  postSort: state.getIn(['postsData', 'postSort'])
-})
+const mapState = state => {
+  return {
+    posts:
+      state.toJS().postsData.posts.length &&
+      state.toJS().postsData.posts.map(post => ({
+        key: post.id,
+        title: post.title,
+        author: post.author,
+        comments: post.commentCount,
+        voteScore: post.voteScore,
+        time: post.timestamp,
+        category: post.category
+      })),
+    postSort: state.getIn(['postsData', 'postSort'])
+  }
+}
 
 const mapDispatch = dispatch => ({
   getPosts(cate) {

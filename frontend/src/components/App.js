@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Layout } from 'antd';
 import AppHeader from './AppHeader'
 import PostList from './PostList'
@@ -7,7 +7,6 @@ import ModifyPost from './ModifyPost'
 import PostDetail from './PostDetail'
 import NoMathch from './NoMatch'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
-
 
 const { Content, Footer } = Layout;
 
@@ -20,7 +19,7 @@ export default class Home extends Component {
     const browserHeight = window.innerHeight;
 
     return (
-      <div>
+      <Fragment>
         <BrowserRouter>
           <Layout className="layout" style={{ minHeight: browserHeight }}>
             <AppHeader />
@@ -42,7 +41,7 @@ export default class Home extends Component {
             </Footer>
           </Layout>
         </BrowserRouter>
-      </div>
+      </Fragment>
         )
       }
     }

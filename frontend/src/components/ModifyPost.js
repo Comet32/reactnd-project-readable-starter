@@ -42,11 +42,10 @@ class CreatePost extends Component {
       title: this.titleInput.input.value,
       body: this.bodyInput.textAreaRef.value
     }
-    console.log(body)
     modifyPost(id, body).then(res => {
-      console.log(res)
       this.props.history.push('')
       this.props.changeCateIndex(0)
+      message.success('修改成功', 2)
     })
   }
 

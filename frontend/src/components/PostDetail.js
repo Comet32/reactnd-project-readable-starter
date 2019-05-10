@@ -2,10 +2,13 @@ import { message, Button, Divider, Input } from 'antd'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import Loading from 'react-loading'
+
 import CommentItem from './CommentItem'
 import NoMatch from './NoMatch'
 import { changePostVoteAPI, deletePostAPI, addCommentAPI } from '../utils/api'
 import { random24 } from '../utils/helpers'
+import deleteConfirm from './DeleteConfirm'
 
 // actions
 import { changeID } from '../actions/modifyPage'
@@ -46,20 +49,26 @@ class PostDetail extends Component {
 
   handleDeletePost = (e, id) => {
     e.preventDefault()
+    deleteConfirm(id, this.handleOk)
+  }
+
+  handleOk = id => {
     deletePostAPI(id).then(res => {
       this.props.history.push('')
+      message.success('删除成功',2);
     })
   }
 
-  handleSubmitComment = that => {
+  handleSubmitComment = () => {
     // 表单验证
-    let bodyValue = that.bodyInput.textAreaRef.value
-    let authorVlaue = that.authorInput.input.value
-    if (!authorVlaue.trim()) {
+    let bodyValue = this.bodyInput.textAreaRef.value
+    let authorVlaue = this.authorInput.input.value
+    debugger
+    if (authorVlaue.trim() === '') {
       message.error('作者名称不能为空', 2)
       return
     }
-    if (!bodyValue.trim()) {
+    if (bodyValue.trim() === '') {
       message.error('评论内容不能为空', 2)
       return
     }
@@ -69,22 +78,26 @@ class PostDetail extends Component {
       id: random24(),
       timestamp: Date.now(),
       body: bodyValue,
-      author: that.authorInput.input.value,
-      parentId: that.props.match.params.id
+      author: this.authorInput.input.value,
+      parentId: this.props.match.params.id
     }).then(res => {
-      that.bodyInput.textAreaRef.value = ''
-      that.authorInput.input.value = ''
-      that.props.dispatch(getComments(that.props.match.params.id))
-      that.props.dispatch(getPost(that.props.match.params.id))
+      this.bodyInput.textAreaRef.value = ''
+      this.authorInput.input.value = ''
+      this.props.dispatch(getComments(this.props.match.params.id))
+      this.props.dispatch(getPost(this.props.match.params.id))
     })
   }
 
   render() {
-    const { post, dispatch, comments } = this.props
+    const { post, dispatch, comments, isLoading } = this.props
 
     return (
       <div style={{ width: '70%', margin: '0 auto' }}>
-        {post.id === undefined ? (
+        {isLoading ? (
+          <div className="loading">
+            <Loading type="spin" color="#041427" />
+          </div>
+        ) : post.id === undefined ? (
           <NoMatch />
         ) : (
           <div>
@@ -99,7 +112,7 @@ class PostDetail extends Component {
             <div className="detail-postBody">{post.body}</div>
             <div className="detail-postInfo">
               <span style={{ marginRight: '20px' }}>
-                当前得分：
+                投票得分：
                 {post.voteScore}
               </span>
               <Button
@@ -166,7 +179,7 @@ class PostDetail extends Component {
               <div style={{ textAlign: 'center' }}>
                 <Button
                   onClick={() => {
-                    this.handleSubmitComment(this)
+                    this.handleSubmitComment()
                   }}
                   type="primary"
                   size="large"
@@ -197,7 +210,8 @@ const mapState = state => ({
   comments: state
     .getIn(['detailData', 'comments'])
     .toJS()
-    .reverse()
+    .reverse(),
+  isLoading: state.getIn(['detailData', 'isLoading'])
 })
 
 export default connect(mapState)(PostDetail)
