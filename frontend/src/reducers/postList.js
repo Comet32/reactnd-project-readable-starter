@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable'
-import { GET_CATEGORIES, GET_POSTS, CHANGE_SORT } from '../actions'
+import { GET_CATEGORIES, GET_POSTS, CHANGE_SORT } from '../actions/postList'
 
 let postsDefault = fromJS({
   categories: [],

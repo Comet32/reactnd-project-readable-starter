@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Layout } from 'antd'
 import AppHeader from './commons/AppHeader'
-import PostList from './components/PostList'
+import PostList from './pages/PostList'
 import CreatePost from './pages/CreatePost'
 import EditPost from './pages/EditPost'
 import PostDetail from './pages/PostDetail'

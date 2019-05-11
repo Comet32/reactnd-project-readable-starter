@@ -3,11 +3,14 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Loading from 'react-loading'
+import sortBy from 'sort-by'
 
 import CommentItem from '../components/CommentItem'
 import NoMatch from './NoMatch'
+import SortRadio from '../components/SortRadio'
+
 import { changePostVoteAPI, deletePostAPI, addCommentAPI } from '../utils/api'
-import { random24 } from '../utils/helpers'
+import { random24, chineseToEnglish } from '../utils/helpers'
 import deleteConfirm from '../components/DeleteConfirm'
 
 // actions
@@ -16,7 +19,13 @@ import { getPost, getComments } from '../actions/detailPage'
 
 const { TextArea } = Input
 
+const commentRadioList = ['标题', '用户', '投票得分', '时间']
+
 class PostDetail extends Component {
+  state = {
+    sort: 'voteScore'
+  }
+
   componentDidMount() {
     const id = this.props.match.params.id
     this.props.dispatch(getPost(id))
@@ -54,7 +63,7 @@ class PostDetail extends Component {
   handleOk = id => {
     deletePostAPI(id).then(res => {
       this.props.history.push('')
-      message.success('删除成功',2);
+      message.success('删除成功', 2)
     })
   }
 
@@ -62,7 +71,6 @@ class PostDetail extends Component {
     // 表单验证
     let bodyValue = this.bodyInput.textAreaRef.value
     let authorVlaue = this.authorInput.input.value
-    debugger
     if (authorVlaue.trim() === '') {
       message.error('作者名称不能为空', 2)
       return
@@ -88,8 +96,16 @@ class PostDetail extends Component {
     })
   }
 
+  handleChangeSort = para => {
+    const sort = chineseToEnglish(para)
+    this.setState({
+      sort
+    })
+  }
+
   render() {
-    const { post, dispatch, comments, isLoading } = this.props
+    let { post, comments, isLoading } = this.props
+    comments = comments.sort(sortBy(this.state.sort)).reverse()
 
     return (
       <div style={{ width: '70%', margin: '0 auto' }}>
@@ -136,11 +152,7 @@ class PostDetail extends Component {
                 {post.commentCount}
               </span>
               <span className="detail-postAction">
-                <Link
-                  to={`/edit/${post.id}`}
-                >
-                  Edit
-                </Link>
+                <Link to={`/edit/${post.id}`}>Edit</Link>
                 <Divider type="vertical" />
                 <a
                   href=" "
@@ -185,6 +197,11 @@ class PostDetail extends Component {
                 </Button>
               </div>
               <Divider style={{ fontSize: '20px' }}>评 论</Divider>
+              <SortRadio
+                name="评论排序"
+                list={commentRadioList}
+                onChangeSort={this.handleChangeSort}
+              />
               <div>
                 {comments.map(item => (
                   <CommentItem

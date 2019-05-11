@@ -4,7 +4,7 @@ import { Layout, Menu, Button } from 'antd'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { getCategories, getPosts } from '../actions'
+import { getCategories, getPosts } from '../actions/postList'
 import { changeCateIndex } from '../actions/header'
 
 const { Header } = Layout

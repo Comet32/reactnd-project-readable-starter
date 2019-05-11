@@ -7,7 +7,7 @@ import { Provider, } from 'react-redux'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux-immutable'
 
-import postsData from './reducers'
+import postsData from './reducers/postList'
 import headerData from './reducers/header'
 import modifyData from './reducers/editPage'
 import detailData from './reducers/detailPage'

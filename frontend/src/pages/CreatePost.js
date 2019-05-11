@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { message} from 'antd'
+import { message } from 'antd'
 import { random24 } from '../utils/helpers'
 import { postPostsAPI } from '../utils/api'
 import { changeCateIndex } from '../actions/header'
+import { connect } from 'react-redux'
 
 import PostForm from '../components/PostForm'
 
@@ -79,4 +80,4 @@ class CreatePost extends Component {
   }
 }
 
-export default CreatePost
+export default connect()(CreatePost)

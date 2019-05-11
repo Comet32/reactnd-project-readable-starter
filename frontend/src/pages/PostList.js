@@ -4,13 +4,12 @@ import { connect } from 'react-redux'
 import sortBy from 'sort-by'
 import { Link } from 'react-router-dom'
 
-import deleteConfirm from './DeleteConfirm'
+import deleteConfirm from '../components/DeleteConfirm'
+import SortRadio from '../components/SortRadio'
 
-import { getPosts, changePostSort } from '../actions'
+import { getPosts, changePostSort } from '../actions/postList'
 import { deletePostAPI, changePostVoteAPI } from '../utils/api'
-
-const RadioButton = Radio.Button
-const RadioGroup = Radio.Group
+import { chineseToEnglish } from '../utils/helpers'
 
 class PostList extends React.Component {
   state = {
@@ -51,26 +50,7 @@ class PostList extends React.Component {
 
   // 改变帖子排列顺序
   handleChangeSort = para => {
-    let sort = ''
-    switch (para) {
-      case '标题':
-        sort = 'title'
-        break
-      case '用户':
-        sort = 'author'
-        break
-      case '评论数':
-        sort = 'comments'
-        break
-      case '投票得分':
-        sort = 'voteScore'
-        break
-      case '时间':
-        sort = 'time'
-        break
-      default:
-        sort = 'voteScore'
-    }
+    const sort = chineseToEnglish(para)
     this.props.changePostSort(sort)
   }
 
@@ -150,24 +130,7 @@ class PostList extends React.Component {
 
     return (
       <div>
-        <span style={{ fontWeight: 'bolder', fontSize: '16px' }}>
-          帖子排序：
-        </span>
-        <RadioGroup
-          style={{ marginBottom: '20px' }}
-          defaultValue="投票得分"
-          size="default"
-        >
-          {radioButtonList.map((item, i) => (
-            <RadioButton
-              onClick={() => this.handleChangeSort(item)}
-              key={i}
-              value={item}
-            >
-              {item}
-            </RadioButton>
-          ))}
-        </RadioGroup>
+        <SortRadio name='帖子排序' list={radioButtonList} onChangeSort={this.handleChangeSort} />
         {posts && <Table columns={columns} dataSource={posts} />}
       </div>
     )
@@ -184,7 +147,7 @@ const mapState = state => {
         author: post.author,
         comments: post.commentCount,
         voteScore: post.voteScore,
-        time: post.timestamp,
+        timestamp: post.timestamp,
         category: post.category
       })),
     postSort: state.getIn(['postsData', 'postSort'])
