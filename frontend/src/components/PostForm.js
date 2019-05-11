@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input, Radio, Button } from 'antd'
+import PropTypes from 'prop-types';
 
 const { TextArea } = Input
 
@@ -75,4 +76,14 @@ export default function PostForm({
       </div>
     </div>
   )
+}
+
+PostForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  onChangeInput: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool
 }

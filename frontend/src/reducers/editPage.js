@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable'
-import { CHANGE_TITLE, CHANGE_BODY, INI_MODIFY, CHANGE_ID } from '../actions/editPage'
+import { INI_MODIFY, CHNAGE_VALUE } from '../actions/editPage'
 
 const defaultState = fromJS({
   title: '',
@@ -12,12 +12,8 @@ export default function editData(state = defaultState, action) {
   switch (action.type) {
     case INI_MODIFY:
       return fromJS(action.value)
-    case CHANGE_TITLE:
-      return state.set('title', action.value)
-    case CHANGE_BODY:
-      return state.set('body', action.value)
-    case CHANGE_ID:
-      return state.set('id', action.id)
+    case CHNAGE_VALUE:
+      return state.set(action.name, action.value)
     default:
       return state
   }

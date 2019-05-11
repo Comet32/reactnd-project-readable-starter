@@ -11,7 +11,6 @@ import { random24 } from '../utils/helpers'
 import deleteConfirm from '../components/DeleteConfirm'
 
 // actions
-import { changeID } from '../actions/editPage'
 import { changeCateIndex } from '../actions/header'
 import { getPost, getComments } from '../actions/detailPage'
 
@@ -138,10 +137,7 @@ class PostDetail extends Component {
               </span>
               <span className="detail-postAction">
                 <Link
-                  to="/modify-post"
-                  onClick={e => {
-                    dispatch(changeID(post.id))
-                  }}
+                  to={`/edit/${post.id}`}
                 >
                   Edit
                 </Link>

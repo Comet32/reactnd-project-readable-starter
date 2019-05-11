@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 import deleteConfirm from './DeleteConfirm'
 
 import { getPosts, changePostSort } from '../actions'
-import { changeID } from '../actions/editPage'
 import { deletePostAPI, changePostVoteAPI } from '../utils/api'
 
 const RadioButton = Radio.Button
@@ -76,8 +75,6 @@ class PostList extends React.Component {
   }
 
   render() {
-    const { changeID } = this.props
-
     const columns = [
       {
         title: '标题',
@@ -132,9 +129,6 @@ class PostList extends React.Component {
           <span>
             <Link
               to={`edit/${record.key}`}
-              onClick={e => {
-                changeID(record.key)
-              }}
             >
               Edit
             </Link>
@@ -203,9 +197,6 @@ const mapDispatch = dispatch => ({
   },
   changePostSort(sort) {
     dispatch(changePostSort(sort))
-  },
-  changeID(id) {
-    dispatch(changeID(id))
   }
 })
 
