@@ -11,7 +11,7 @@ import { random24 } from '../utils/helpers'
 import deleteConfirm from '../components/DeleteConfirm'
 
 // actions
-import { changeID } from '../actions/modifyPage'
+import { changeID } from '../actions/editPage'
 import { changeCateIndex } from '../actions/header'
 import { getPost, getComments } from '../actions/detailPage'
 

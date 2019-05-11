@@ -24,9 +24,15 @@ export function changeID(id){
 
 // 获取需要改变的帖子
 export const INI_MODIFY = 'INI_MODIFY'
-export function IniModify(value) {
+export function IniModify(data) {
+  const {title, author, category, body} = data
   return {
     type: INI_MODIFY,
-    value
+    value:{
+      title,
+      author,
+      category,
+      body
+    }
   }
 }

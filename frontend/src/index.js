@@ -9,7 +9,7 @@ import { combineReducers } from 'redux-immutable'
 
 import postsData from './reducers'
 import headerData from './reducers/header'
-import modifyData from './reducers/modifyPage'
+import modifyData from './reducers/editPage'
 import detailData from './reducers/detailPage'
 
 //合并 reducer

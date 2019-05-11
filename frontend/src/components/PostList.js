@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import deleteConfirm from './DeleteConfirm'
 
 import { getPosts, changePostSort } from '../actions'
-import { changeID } from '../actions/modifyPage'
+import { changeID } from '../actions/editPage'
 import { deletePostAPI, changePostVoteAPI } from '../utils/api'
 
 const RadioButton = Radio.Button
@@ -35,7 +35,7 @@ class PostList extends React.Component {
     e.preventDefault()
     deleteConfirm(id, this.handleOk)
   }
-  
+
   handleOk = id => {
     deletePostAPI(id).then(res => {
       this.getCataPosts()
@@ -131,7 +131,7 @@ class PostList extends React.Component {
         render: (text, record) => (
           <span>
             <Link
-              to="/modify-post"
+              to={`edit/${record.key}`}
               onClick={e => {
                 changeID(record.key)
               }}

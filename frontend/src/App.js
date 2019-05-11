@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from 'react'
-import { Layout } from 'antd';
+import { Layout } from 'antd'
 import AppHeader from './commons/AppHeader'
 import PostList from './components/PostList'
 import CreatePost from './pages/CreatePost'
-import ModifyPost from './pages/ModifyPost'
+import EditPost from './pages/EditPost'
 import PostDetail from './pages/PostDetail'
 import NoMathch from './pages/NoMatch'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 
-const { Content, Footer } = Layout;
+const { Content, Footer } = Layout
 
 export default class Home extends Component {
   state = {
@@ -16,7 +16,7 @@ export default class Home extends Component {
   }
 
   render() {
-    const browserHeight = window.innerHeight;
+    const browserHeight = window.innerHeight
 
     return (
       <Fragment>
@@ -25,23 +25,23 @@ export default class Home extends Component {
             <AppHeader />
             <Content style={{ padding: '0 50px', marginTop: '30px' }}>
               <Switch>
-                <Route exact path='/' component={PostList} />
-                <Route exact path='/react' component={PostList} />
-                <Route exact path='/redux' component={PostList} />
-                <Route exact path='/udacity' component={PostList} />
-                <Route exact path='/create-post' component={CreatePost} />
-                <Route exact path='/modify-post' component={ModifyPost} />
-                <Route exact path='/:category/:id' component={PostDetail} />
-                <Route exact path='/404' component={NoMathch} />
+                <Route exact path="/" component={PostList} />
+                <Route exact path="/react" component={PostList} />
+                <Route exact path="/redux" component={PostList} />
+                <Route exact path="/udacity" component={PostList} />
+                <Route exact path="/create-post" component={CreatePost} />
+                <Route exact path="/edit/:id" component={EditPost} />
+                <Route exact path="/:category/:id" component={PostDetail} />
+                <Route exact path="/404" component={NoMathch} />
                 <Redirect from="*" to="/404" />
               </Switch>
             </Content>
-              <Footer style={{ textAlign: 'center' }}>
-                Readable ©2018 Created by Zhao
+            <Footer style={{ textAlign: 'center' }}>
+              Readable ©2018 Created by Zhao
             </Footer>
           </Layout>
         </BrowserRouter>
       </Fragment>
-        )
-      }
-    }
+    )
+  }
+}

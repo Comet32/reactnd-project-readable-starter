@@ -1,15 +1,14 @@
 import { fromJS } from 'immutable'
-import { CHANGE_TITLE, CHANGE_BODY, INI_MODIFY, CHANGE_ID } from '../actions/modifyPage'
+import { CHANGE_TITLE, CHANGE_BODY, INI_MODIFY, CHANGE_ID } from '../actions/editPage'
 
 const defaultState = fromJS({
-  id: '',
   title: '',
   author: '',
   category: '',
   body: ''
 })
 
-export default function modifyData(state = defaultState, action) {
+export default function editData(state = defaultState, action) {
   switch (action.type) {
     case INI_MODIFY:
       return fromJS(action.value)
