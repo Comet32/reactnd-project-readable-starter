@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { Layout } from 'antd';
-import AppHeader from './AppHeader'
-import PostList from './PostList'
-import CreatePost from './CreatePost'
-import ModifyPost from './ModifyPost'
-import PostDetail from './PostDetail'
-import NoMathch from './NoMatch'
+import AppHeader from './commons/AppHeader'
+import PostList from './components/PostList'
+import CreatePost from './pages/CreatePost'
+import ModifyPost from './pages/ModifyPost'
+import PostDetail from './pages/PostDetail'
+import NoMathch from './pages/NoMatch'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 const { Content, Footer } = Layout;

@@ -1,3 +1,5 @@
+import { message } from 'antd'
+
 const api = 'http://localhost:3001'
 
 const headers = { Authorization: 'whatever-you-want' }
@@ -17,11 +19,13 @@ export function getPostsAPI(cate) {
   } else {
     newApi = `${api}/${cate}/posts`
   }
-  return fetch(newApi, { headers }).then(res => {
-    return res.json()
-  }).catch((res) => {
-    return res
-  })
+  return fetch(newApi, { headers })
+    .then(res => {
+      return res.json()
+    })
+    .catch(res => {
+      return res
+    })
 }
 
 // 获取某一个帖子
@@ -50,7 +54,9 @@ export function postPostsAPI(body) {
     },
     method: 'POST',
     body: JSON.stringify(body)
-  }).then(res => res.json())
+  }).then(
+    res => res.json()
+  )
 }
 
 // 删除帖子
@@ -74,7 +80,9 @@ export function changePostVoteAPI(option, id) {
 
 // 获取某一帖子的所有评论
 export function getCommentsAPI(id) {
-  return fetch(`${api}/posts/${id}/comments`, { headers }).then(res => res.json())
+  return fetch(`${api}/posts/${id}/comments`, { headers }).then(res =>
+    res.json()
+  )
 }
 
 // 添加新的评论

@@ -39,11 +39,16 @@ class CreatePost extends Component {
       author: this.authorInput.input.value,
       category: this.cateInput.state.value
     }
-    postPostsAPI(body).then(res => {
-      this.props.history.push('')
-      this.props.dispatch(changeCateIndex(0))
-      message.success('创建成功', 2)
-    })
+    postPostsAPI(body).then(
+      res => {
+        this.props.history.push('')
+        this.props.dispatch(changeCateIndex(0))
+        message.success('创建成功', 2)
+      },
+      () => {
+        message.error('创建失败', 2)
+      }
+    )
   }
 
   render() {

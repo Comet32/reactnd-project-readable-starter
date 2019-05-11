@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Loading from 'react-loading'
 
-import CommentItem from './CommentItem'
+import CommentItem from '../components/CommentItem'
 import NoMatch from './NoMatch'
 import { changePostVoteAPI, deletePostAPI, addCommentAPI } from '../utils/api'
 import { random24 } from '../utils/helpers'
-import deleteConfirm from './DeleteConfirm'
+import deleteConfirm from '../components/DeleteConfirm'
 
 // actions
 import { changeID } from '../actions/modifyPage'
@@ -85,6 +85,7 @@ class PostDetail extends Component {
       this.authorInput.input.value = ''
       this.props.dispatch(getComments(this.props.match.params.id))
       this.props.dispatch(getPost(this.props.match.params.id))
+      message.success('发表成功')
     })
   }
 
