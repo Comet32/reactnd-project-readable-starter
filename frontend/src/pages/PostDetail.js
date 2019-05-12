@@ -38,6 +38,14 @@ class PostDetail extends Component {
     this.props.dispatch(getComments(id))
   }
 
+  // componentDidUpdate() {
+  //   //设置 Content 的高度
+  //   const scrollHeight = this.detail.scrollHeight
+  //   const contentEle = document.getElementById('appContent')
+  //   contentEle.style.height = scrollHeight + 'px'
+  //   debugger
+  // }
+
   componentWillUnmount() {
     const id = this.state.id
     this.props.dispatch(getComments(id))
@@ -99,7 +107,7 @@ class PostDetail extends Component {
       this.props.dispatch(getPost(this.props.match.params.id))
       //将排序调整到 '时间'，以便能让新添加的评论显示在最上方
       this.setState({
-        sort:'timestamp'
+        sort: 'timestamp'
       })
       message.success('发表成功')
     })
@@ -121,7 +129,11 @@ class PostDetail extends Component {
     // comments = sort === 'voteScore' ? comments.reverse() : comments
 
     return (
-      <div style={{ width: '70%', margin: '0 auto' }}>
+      <div
+        ref={detail => (this.detail = detail)}
+        id="postDetail"
+        style={{ width: '70%', margin: '0 auto' }}
+      >
         {isLoading ? (
           <div className="loading">
             <Loading type="spin" color="#041427" />
@@ -225,10 +237,7 @@ class PostDetail extends Component {
                       classNames="item-transition"
                       unmountOnExit
                     >
-                      <CommentItem
-                        parentID={this.state.id}
-                        item={item}
-                      />
+                      <CommentItem parentID={this.state.id} item={item} />
                     </CSSTransition>
                   ))}
                 </TransitionGroup>

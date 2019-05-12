@@ -62,7 +62,7 @@ class PostList extends React.Component {
         dataIndex: 'title',
         key: 'title',
         render: (text, record) => (
-          <Link to={`/${record.category}/${record.key}`}>{text}</Link>
+          <Link to={`detail/${record.category}/${record.key}`}>{text}</Link>
         )
       },
       {

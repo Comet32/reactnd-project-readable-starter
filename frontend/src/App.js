@@ -18,7 +18,7 @@ const routes = [
   { path: '/udacity', name: 'PostUdacity', Component: PostList },
   { path: '/create-post', name: 'CreatePost', Component: CreatePost },
   { path: '/edit/:id', name: 'EditPost', Component: EditPost },
-  { path: '/:category/:id', name: 'PostDetail', Component: PostDetail },
+  { path: '/detail/:category/:id', name: 'PostDetail', Component: PostDetail },
   { path: '/404', name: 'NoMathch', Component: NoMathch }
 ]
 
@@ -36,7 +36,7 @@ export default class Home extends Component {
           <Layout className="layout" style={{ minHeight: browserHeight }}>
             <AppHeader />
             <Content style={{ padding: '0 50px', marginTop: '30px' }}>
-                {/* <Route exact path="/" component={PostList} />
+              {/* <Route exact path="/" component={PostList} />
                 <Route exact path="/react" component={PostList} />
                 <Route exact path="/redux" component={PostList} />
                 <Route exact path="/udacity" component={PostList} />
@@ -44,28 +44,28 @@ export default class Home extends Component {
                 <Route exact path="/edit/:id" component={EditPost} />
                 <Route exact path="/:category/:id" component={PostDetail} />
                 <Route exact path="/404" component={NoMathch} /> */}
-                {routes.map(({ path, Component }) => (
-                  <Route key={path} exact path={path}>
-                    {({ ...props }) => (
-                      <CSSTransition
-                        in={props.match !== null}
-                        timeout={300}
-                        classNames="page-transition"
-                        unmountOnExit
-                      >
-                        <div className="page-transition">
-                          <Component {...props}/>
-                        </div>
-                      </CSSTransition>
-                    )}
-                  </Route>
-                ))}
-                <Switch>
+              {routes.map(({ path, Component }) => (
+                <Route key={path} exact path={path}>
+                  {({ ...props }) => (
+                    <CSSTransition
+                      in={props.match !== null}
+                      timeout={300}
+                      classNames="page-transition"
+                      unmountOnExit
+                    >
+                      <div className="page-transition">
+                        <Component {...props} />
+                      </div>
+                    </CSSTransition>
+                  )}
+                </Route>
+              ))}
+              <Switch>
                 {routes.map(({ path, Component }) => (
                   <Route key={path} exact path={path} component={null} />
                 ))}
-                <Redirect to='/404'/>
-                </Switch>
+                <Redirect to="/404" />
+              </Switch>
             </Content>
             <Footer style={{ textAlign: 'center' }}>
               Readable ©2018 Created by Zhao
