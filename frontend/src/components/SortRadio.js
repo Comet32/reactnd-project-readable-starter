@@ -4,13 +4,13 @@ import { Radio } from 'antd'
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 
-export default function SortRadio({list, onChangeSort, name}) {
+export default function SortRadio({list, onChangeSort, name, defaultSort}) {
   return (
     <React.Fragment>
       <span style={{ fontWeight: 'bolder', fontSize: '16px' }}>{name}：</span>
       <RadioGroup
         style={{ marginBottom: '20px' }}
-        defaultValue="投票得分"
+        defaultValue={defaultSort}
         size="default"
       >
         {list.map(item => (

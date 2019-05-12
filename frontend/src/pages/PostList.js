@@ -1,4 +1,4 @@
-import { Table, Divider, Button, Radio, message } from 'antd'
+import { Table, Divider, Button, message } from 'antd'
 import React from 'react'
 import { connect } from 'react-redux'
 import sortBy from 'sort-by'
@@ -10,6 +10,7 @@ import SortRadio from '../components/SortRadio'
 import { getPosts, changePostSort } from '../actions/postList'
 import { deletePostAPI, changePostVoteAPI } from '../utils/api'
 import { chineseToEnglish } from '../utils/helpers'
+import { radioButtonListForPost } from '../utils/constants'
 
 class PostList extends React.Component {
   state = {
@@ -107,11 +108,7 @@ class PostList extends React.Component {
         key: 'action',
         render: (text, record) => (
           <span>
-            <Link
-              to={`edit/${record.key}`}
-            >
-              Edit
-            </Link>
+            <Link to={`edit/${record.key}`}>Edit</Link>
             <Divider type="vertical" />
             <a onClick={e => this.handleDeletePost(e, record.key)} href=" ">
               Delete
@@ -121,8 +118,6 @@ class PostList extends React.Component {
       }
     ]
 
-    const radioButtonList = ['标题', '用户', '评论数', '投票得分', '时间']
-
     // 默认是以投票得分为排序，并以分数大的排列在前
     const posts =
       this.props.posts &&
@@ -130,7 +125,12 @@ class PostList extends React.Component {
 
     return (
       <div>
-        <SortRadio name='帖子排序' list={radioButtonList} onChangeSort={this.handleChangeSort} />
+        <SortRadio
+          name="帖子排序"
+          list={radioButtonListForPost}
+          onChangeSort={this.handleChangeSort}
+          defaultSort="投票得分"
+        />
         {posts && <Table columns={columns} dataSource={posts} />}
       </div>
     )

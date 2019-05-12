@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Loading from 'react-loading'
 import sortBy from 'sort-by'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 import CommentItem from '../components/CommentItem'
 import NoMatch from './NoMatch'
@@ -23,18 +24,22 @@ const commentRadioList = ['标题', '用户', '投票得分', '时间']
 
 class PostDetail extends Component {
   state = {
-    sort: 'voteScore'
+    sort: 'timestamp',
+    id: ''
   }
 
   componentDidMount() {
     const id = this.props.match.params.id
+    this.setState({
+      id
+    })
     this.props.dispatch(getPost(id))
     this.props.dispatch(changeCateIndex(5))
     this.props.dispatch(getComments(id))
   }
 
   componentWillUnmount() {
-    const id = this.props.match.params.id
+    const id = this.state.id
     this.props.dispatch(getComments(id))
   }
 
@@ -92,20 +97,28 @@ class PostDetail extends Component {
       this.authorInput.input.value = ''
       this.props.dispatch(getComments(this.props.match.params.id))
       this.props.dispatch(getPost(this.props.match.params.id))
+      //将排序调整到 '时间'，以便能让新添加的评论显示在最上方
+      this.setState({
+        sort:'timestamp'
+      })
       message.success('发表成功')
     })
   }
 
   handleChangeSort = para => {
+    const id = this.props.match.params.id
     const sort = chineseToEnglish(para)
     this.setState({
       sort
     })
+    this.props.dispatch(getComments(id))
   }
 
   render() {
     let { post, comments, isLoading } = this.props
-    comments = comments.sort(sortBy(this.state.sort)).reverse()
+    const { sort } = this.state
+    comments = comments.sort(sortBy(sort)).reverse()
+    // comments = sort === 'voteScore' ? comments.reverse() : comments
 
     return (
       <div style={{ width: '70%', margin: '0 auto' }}>
@@ -201,15 +214,24 @@ class PostDetail extends Component {
                 name="评论排序"
                 list={commentRadioList}
                 onChangeSort={this.handleChangeSort}
+                defaultSort="时间"
               />
               <div>
-                {comments.map(item => (
-                  <CommentItem
-                    parentID={this.props.match.params.id}
-                    item={item}
-                    key={item.id}
-                  />
-                ))}
+                <TransitionGroup>
+                  {comments.map(item => (
+                    <CSSTransition
+                      key={item.id}
+                      timeout={500}
+                      classNames="item-transition"
+                      unmountOnExit
+                    >
+                      <CommentItem
+                        parentID={this.state.id}
+                        item={item}
+                      />
+                    </CSSTransition>
+                  ))}
+                </TransitionGroup>
               </div>
             </div>
           </div>
