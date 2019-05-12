@@ -125,13 +125,21 @@ class PostList extends React.Component {
 
     return (
       <div>
-        <SortRadio
-          name="帖子排序"
-          list={radioButtonListForPost}
-          onChangeSort={this.handleChangeSort}
-          defaultSort="投票得分"
-        />
-        {posts && <Table columns={columns} dataSource={posts} />}
+        {posts.length ? (
+          <React.Fragment>
+            <SortRadio
+              name="帖子排序"
+              list={radioButtonListForPost}
+              onChangeSort={this.handleChangeSort}
+              defaultSort="投票得分"
+            />
+            <Table columns={columns} dataSource={posts} />
+          </React.Fragment>
+        ) : (
+          <div>
+            没有帖子，如果需要添加新的帖子，请右上角的按钮「新建帖子」来添加。
+          </div>
+        )}
       </div>
     )
   }
