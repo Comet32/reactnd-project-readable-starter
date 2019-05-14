@@ -1,3 +1,4 @@
+import { message } from 'antd'
 import { getCategoriesAPI, getPostsAPI } from '../utils/api'
 
 // 获取分类
@@ -17,12 +18,16 @@ export function getCategories() {
 export const GET_POSTS = 'GET_POSTS'
 export function getPosts(cate) {
   return dispatch => {
-    getPostsAPI(cate).then(res => {
-      dispatch({
-        type: GET_POSTS,
-        posts: res
+    getPostsAPI(cate)
+      .then(res => {
+        dispatch({
+          type: GET_POSTS,
+          posts: res
+        })
       })
-    })
+      .catch(res => {
+        message.warn('服务器异常，获取数据失败')
+      })
   }
 }
 

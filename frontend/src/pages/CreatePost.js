@@ -64,7 +64,7 @@ class CreatePost extends Component {
         message.success('创建成功', 2)
       },
       () => {
-        message.error('创建失败', 2)
+        message.error('服务器异常，创建失败', 2)
       }
     )
   }

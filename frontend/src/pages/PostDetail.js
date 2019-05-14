@@ -24,7 +24,7 @@ const commentRadioList = ['标题', '用户', '投票得分', '时间']
 
 class PostDetail extends Component {
   state = {
-    sort: 'timestamp',
+    sort: '时间',
     id: ''
   }
 
@@ -37,14 +37,6 @@ class PostDetail extends Component {
     this.props.dispatch(changeCateIndex(5))
     this.props.dispatch(getComments(id))
   }
-
-  // componentDidUpdate() {
-  //   //设置 Content 的高度
-  //   const scrollHeight = this.detail.scrollHeight
-  //   const contentEle = document.getElementById('appContent')
-  //   contentEle.style.height = scrollHeight + 'px'
-  //   debugger
-  // }
 
   componentWillUnmount() {
     const id = this.state.id
@@ -107,7 +99,7 @@ class PostDetail extends Component {
       this.props.dispatch(getPost(this.props.match.params.id))
       //将排序调整到 '时间'，以便能让新添加的评论显示在最上方
       this.setState({
-        sort: 'timestamp'
+        sort: '时间'
       })
       message.success('发表成功')
     })
@@ -115,9 +107,8 @@ class PostDetail extends Component {
 
   handleChangeSort = para => {
     const id = this.props.match.params.id
-    const sort = chineseToEnglish(para)
     this.setState({
-      sort
+      sort: para
     })
     this.props.dispatch(getComments(id))
   }
@@ -125,8 +116,7 @@ class PostDetail extends Component {
   render() {
     let { post, comments, isLoading } = this.props
     const { sort } = this.state
-    comments = comments.sort(sortBy(sort)).reverse()
-    // comments = sort === 'voteScore' ? comments.reverse() : comments
+    comments = comments.sort(sortBy(chineseToEnglish(sort))).reverse()
 
     return (
       <div
@@ -222,26 +212,33 @@ class PostDetail extends Component {
                 </Button>
               </div>
               <Divider style={{ fontSize: '20px' }}>评 论</Divider>
-              <SortRadio
-                name="评论排序"
-                list={commentRadioList}
-                onChangeSort={this.handleChangeSort}
-                defaultSort="时间"
-              />
-              <div>
-                <TransitionGroup>
-                  {comments.map(item => (
-                    <CSSTransition
-                      key={item.id}
-                      timeout={500}
-                      classNames="item-transition"
-                      unmountOnExit
-                    >
-                      <CommentItem parentID={this.state.id} item={item} />
-                    </CSSTransition>
-                  ))}
-                </TransitionGroup>
-              </div>
+              {comments &&
+                (comments.length ? (
+                  <React.Fragment>
+                    <SortRadio
+                      name="评论排序"
+                      list={commentRadioList}
+                      onChangeSort={this.handleChangeSort}
+                      sortValue={sort}
+                    />
+                    <div>
+                      <TransitionGroup>
+                        {comments.map(item => (
+                          <CSSTransition
+                            key={item.id}
+                            timeout={500}
+                            classNames="item-transition"
+                            unmountOnExit
+                          >
+                            <CommentItem parentID={this.state.id} item={item} />
+                          </CSSTransition>
+                        ))}
+                      </TransitionGroup>
+                    </div>
+                  </React.Fragment>
+                ) : (
+                  <p className="comments-no-contents">目前还没有评论，您可以通过在发表评论区填写评论内容来发表评论。</p>
+                ))}
             </div>
           </div>
         )}

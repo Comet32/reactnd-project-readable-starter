@@ -1,7 +1,8 @@
-import { getPostAPI,getCommentsAPI } from '../utils/api'
+import { message } from 'antd'
+import { getPostAPI, getCommentsAPI } from '../utils/api'
 
 export const GET_POST = 'GET_POST'
-export function getPost(id){
+export function getPost(id) {
   return dispatch => {
     getPostAPI(id).then(res => {
       dispatch({
@@ -14,13 +15,17 @@ export function getPost(id){
 }
 
 export const GET_COMMENTS = 'GET_COMMENTS'
-export function getComments(id){
+export function getComments(id) {
   return dispatch => {
-    getCommentsAPI(id).then(res => {
-      dispatch({
-        type: GET_COMMENTS,
-        comments: res
+    getCommentsAPI(id)
+      .then(res => {
+        dispatch({
+          type: GET_COMMENTS,
+          comments: res
+        })
       })
-    })
+      .catch(res => {
+        message.warn('服务器异常，获取数据失败')
+      })
   }
 }

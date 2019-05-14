@@ -4,7 +4,7 @@ import { GET_CATEGORIES, GET_POSTS, CHANGE_SORT } from '../actions/postList'
 let postsDefault = fromJS({
   categories: [],
   posts: [],
-  postSort: 'voteScore'
+  postSort: '投票得分'
 })
 
 export default function postsData(state = postsDefault, action) {

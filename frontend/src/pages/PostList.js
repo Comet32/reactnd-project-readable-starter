@@ -13,13 +13,9 @@ import { chineseToEnglish } from '../utils/helpers'
 import { radioButtonListForPost } from '../utils/constants'
 
 class PostList extends React.Component {
-  state = {
-    postSort: 'voteScore'
-  }
-
   componentDidMount() {
     this.getCataPosts()
-    this.props.changePostSort('voteScore')
+    this.props.changePostSort('投票得分')
   }
 
   // 根据路由获取帖子
@@ -51,8 +47,7 @@ class PostList extends React.Component {
 
   // 改变帖子排列顺序
   handleChangeSort = para => {
-    const sort = chineseToEnglish(para)
-    this.props.changePostSort(sort)
+    this.props.changePostSort(para)
   }
 
   render() {
@@ -119,27 +114,30 @@ class PostList extends React.Component {
     ]
 
     // 默认是以投票得分为排序，并以分数大的排列在前
-    const posts =
+    const postSortEnglish = chineseToEnglish(this.props.postSort)
+    let posts =
       this.props.posts &&
-      this.props.posts.sort(sortBy(this.props.postSort)).reverse()
+      this.props.posts.sort(sortBy(postSortEnglish)).reverse()
+    posts === 0 && (posts = [])
 
     return (
       <div>
-        {posts.length ? (
-          <React.Fragment>
-            <SortRadio
-              name="帖子排序"
-              list={radioButtonListForPost}
-              onChangeSort={this.handleChangeSort}
-              defaultSort="投票得分"
-            />
-            <Table columns={columns} dataSource={posts} />
-          </React.Fragment>
-        ) : (
-          <div>
-            没有帖子，如果需要添加新的帖子，请右上角的按钮「新建帖子」来添加。
-          </div>
-        )}
+        {posts &&
+          (posts.length ? (
+            <React.Fragment>
+              <SortRadio
+                name="帖子排序"
+                list={radioButtonListForPost}
+                onChangeSort={this.handleChangeSort}
+                sortValue={this.props.postSort}
+              />
+              <Table columns={columns} dataSource={posts} />
+            </React.Fragment>
+          ) : (
+            <div>
+              没有帖子，如果需要添加新的帖子，请点击右上角的按钮「新建帖子」来添加。
+            </div>
+          ))}
       </div>
     )
   }
@@ -148,6 +146,7 @@ class PostList extends React.Component {
 const mapState = state => {
   return {
     posts:
+      state.toJS().postsData.posts &&
       state.toJS().postsData.posts.length &&
       state.toJS().postsData.posts.map(post => ({
         key: post.id,

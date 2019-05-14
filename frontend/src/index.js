@@ -6,6 +6,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider, } from 'react-redux'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux-immutable'
+import logger from 'redux-logger'
 
 import postsData from './reducers/postList'
 import headerData from './reducers/header'
@@ -22,7 +23,7 @@ const reducer = combineReducers({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const enhancer = composeEnhancers(applyMiddleware(thunk))
+const enhancer = composeEnhancers(applyMiddleware(thunk,logger))
 const store = createStore(reducer, enhancer)
 
 ReactDOM.render(

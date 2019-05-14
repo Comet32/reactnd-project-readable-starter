@@ -19,13 +19,9 @@ export function getPostsAPI(cate) {
   } else {
     newApi = `${api}/${cate}/posts`
   }
-  return fetch(newApi, { headers })
-    .then(res => {
-      return res.json()
-    })
-    .catch(res => {
-      return res
-    })
+  return fetch(newApi, { headers }).then(res => {
+    return res.json()
+  })
 }
 
 // 获取某一个帖子
@@ -54,14 +50,16 @@ export function postPostsAPI(body) {
     },
     method: 'POST',
     body: JSON.stringify(body)
-  }).then(
-    res => res.json()
-  )
+  }).then(res => res.json())
 }
 
 // 删除帖子
 export function deletePostAPI(id) {
-  return fetch(`${api}/posts/${id}`, { headers, method: 'DELETE' })
+  return fetch(`${api}/posts/${id}`, { headers, method: 'DELETE' }).catch(
+    res => {
+      message.warn('服务器异常，获取数据失败')
+    }
+  )
 }
 
 // 改变帖子的票数
